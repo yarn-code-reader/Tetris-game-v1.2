@@ -1,24 +1,6 @@
 #include "Peice.h"
+#include "GlobalVar.h"
 
-	 void Peice:: setAtt() {
-		sizeOfBlock = 20;
-		x = 240;
-		y = 100;
-
-		int temp[4][2] = {
-	   {0,1},
-	   {1,1},
-	   {2,1},
-	   {3,1}
-		};
-
-		for (int i = 0; i < 4; i++) {
-
-			shape[i][0] = temp[i][0];
-			shape[i][1] = temp[i][1];
-
-		}
-	}
 
 	void  Peice:: draw(sf::RenderWindow& window) {
 

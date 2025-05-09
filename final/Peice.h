@@ -11,7 +11,6 @@ protected:
 
 public:
 
-	virtual void setAtt();
 	virtual	void rotate(int temp[4][2]) = 0;
 
 	void draw(sf::RenderWindow& window);

@@ -1,9 +1,8 @@
 #include "Grid.h"
+#include "GlobalVar.h"
 
 Grid::Grid(float sx = 0, float sy = 0, int maxR = 0, int maxC = 0 ):
-startx(sx), starty(sy), maxRow(maxR), maxCol(maxC) {
-	
-}
+startx(sx), starty(sy), maxRow(maxR), maxCol(maxC) {}
 
 
 void Grid::setBlockArray(block arr_blocks[8]) {
@@ -29,7 +28,6 @@ void Grid:: draw(sf::RenderWindow& window) {
 	float setx = startx, sety = starty;
 	for (int i = 0; i < maxRow; i++)
 	{
-		//cout << "2\n";
 		setx = startx + sizeOfBlock;
 		for (int j = 0; j < maxCol; j++)
 		{
@@ -37,17 +35,22 @@ void Grid:: draw(sf::RenderWindow& window) {
 			sp.setPosition({ setx, sety });
 			window.draw(sp);
 			setx += sizeOfBlock;
-			//cout << b.getSprite().getPosition().x << "\t"<< b.getSprite().getPosition().y<< endl;
 		}
 		sety += sizeOfBlock;
-		//cout << "end of row " << endl;
 
 	};
-	//cout << "END OF LOOP" << endl << endl;
 }
 
 
-
+void Grid::resetGrid() {
+	for (int i = 0; i < maxRow; i++)
+	{
+		for (int j = 0; j < maxCol; j++)
+		{
+			activity_status[i][j] = 0;
+		}
+	}
+}
 
 
 

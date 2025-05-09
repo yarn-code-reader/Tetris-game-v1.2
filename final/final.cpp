@@ -1,6 +1,12 @@
 #pragma once
 #include "block.h"
+#include "Menu.h"
 #include "Grid.h"
+#include "GlobalVar.h"
+
+//gloval variables 
+int sizeOfBlock = 40;
+
 int main()
 {
     //initalizing everything
@@ -17,20 +23,21 @@ int main()
 
     for (int i = 0; i < 8; i++)
     {
-        arr_of_blocks[i].scale(30, 30);
+        arr_of_blocks[i].scale(sizeOfBlock, sizeOfBlock);
     }
     sf::RenderWindow window(sf::VideoMode({ 950, 700 }), "My window");
 
     Grid grid(360.0, 40.0, 20 ,10);
     grid.setBlockArray(arr_of_blocks);
 
-    grid.activity_status[10][5] = 1;
-    grid.activity_status[11][5] = 2;
-    grid.activity_status[12][5] = 3;
-    grid.activity_status[13][5] = 4;
-    grid.activity_status[1][5] = 5;
-    grid.activity_status[2][5] = 6;
-    grid.activity_status[3][5] = 7;
+    //intializing menu objetcs
+    States* currentState = new States[4]{
+    Menu(), 
+   Menu(),
+   Menu(),
+   Menu()
+    };
+   
 
     // run the program as long as the window is open
     while (window.isOpen())
@@ -41,6 +48,8 @@ int main()
             // "close requested" event: we close the window
             if (event->is<sf::Event::Closed>())
                 window.close();
+
+            currentState[0].checkEvents(window);
         }
 
         sf::Texture txt("allTextures\\blockOfGrid.png");
@@ -52,11 +61,22 @@ int main()
         // clear the window with black color
         window.clear(sf::Color::Black);
 
-        // draw everything here...
-        // window.draw(...);
-        window.draw(menubg);
-        grid.draw(window);
-        grid.print();
+        if (States::isGameOpen()) {
+            // start the game
+        }
+         else if (States::isOptionsOpen()) {
+             // draw options
+        }else if (States::isHtpOpen()) {
+            // draw how to play
+        }
+        else if (States::isPauseScreenOpen()) {
+            // pause screen
+        }
+        else  {
+            // draw menu 
+        }
+
+
         // end the current frame
         window.display();
     }

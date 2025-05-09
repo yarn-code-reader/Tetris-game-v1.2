@@ -6,7 +6,6 @@ public:
 	int activity_status[20][10] = { 0 };
 	float startx;
 	float starty;
-	int sizeOfBlock = 30;
 	int maxRow ;
 	int maxCol ;
 	block allBlock[8];
@@ -16,6 +15,7 @@ public:
 	void print();
 	void draw(sf::RenderWindow& window);
 	void setBlockArray(block b[8]);
+	void resetGrid();
 };
 
 

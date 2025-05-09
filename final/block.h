@@ -9,7 +9,6 @@ class block
 protected:
 	sf::Texture texture;
 	sf::Sprite sprite;
-	float sizeOfBlock;
 
 public:
 	block();
