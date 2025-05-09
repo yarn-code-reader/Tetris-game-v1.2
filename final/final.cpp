@@ -30,6 +30,8 @@ int main()
     Grid grid(360.0, 40.0, 20 ,10);
     grid.setBlockArray(arr_of_blocks);
 
+
+
     //intializing menu objetcs
     States* currentState = new States[4]{
     Menu(), 
@@ -37,7 +39,14 @@ int main()
    Menu(),
    Menu()
     };
-   
+    vector<vector<Texture>> menuBtnTextures = {
+     {Texture("allTextures\\menuPlayBtn.png"), Texture("allTextures\\menuPlayHover.png"), Texture("allTextures\\menuPlaybtnPressed.png")},
+     {Texture("allTextures\\menubtnOpt.png"), Texture("allTextures\\menuOptHover.png"), Texture("allTextures\\menuOptPressed.png")},
+     {Texture("allTextures\\menuHTPbtn.png"), Texture("allTextures\\menuHTPHover.png"), Texture("allTextures\\menuHTPPressed.png")},
+     {Texture("allTextures\\menubtnExit.png"), Texture("allTextures\\menuExitbtnHover.png"), Texture("allTextures\\menuExitPressed.png")}
+    };
+
+    Menu myMenu("allTextures\\menuBgWithoutButtons.png", menuBtnTextures, 4);
 
     // run the program as long as the window is open
     while (window.isOpen())
@@ -49,15 +58,12 @@ int main()
             if (event->is<sf::Event::Closed>())
                 window.close();
 
-            currentState[0].checkEvents(window);
+            myMenu.checkEvents(window);
         }
 
         sf::Texture txt("allTextures\\blockOfGrid.png");
         Texture bg("allTextures\\playscreen.png");
         Sprite menubg(bg);
-        float x = window.getSize().x, y = window.getSize().y;
-        menubg.scale({ x / bg.getSize().x,  y / bg.getSize().y });
-
         // clear the window with black color
         window.clear(sf::Color::Black);
 
@@ -74,6 +80,7 @@ int main()
         }
         else  {
             // draw menu 
+            myMenu.drawMenu(window);
         }
 
 

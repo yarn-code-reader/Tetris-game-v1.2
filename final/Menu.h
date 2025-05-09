@@ -11,14 +11,8 @@ public:
 	// default constructor
 	Menu();
 	Menu(std::string bgTexture, vector<vector<Texture>> texture , int noOfB);
-	void drawMenu(sf::RenderWindow& win) {
-		// draw background
+	void drawMenu(sf::RenderWindow& win);
 
-		// draw buttons 
-
-		// draw backbutton
-	}
-
-	int onButtonClick(int index) override;
+	int onButtonClick(int index) ;
 };
 

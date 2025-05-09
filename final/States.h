@@ -36,6 +36,12 @@ public:
     static void setGameOpen(bool open);
     static void setExit(bool shouldExit);
 
-    virtual  int onButtonClick(int index);
+     virtual int onButtonClick(int index);
     void checkEvents(sf::RenderWindow& win);
+
+    void updateStates(int i , int state) {
+        
+            statesOfBtn[i] = state;
+            sprites[i].setTexture(textures[i][statesOfBtn[i]]);
+    }
 };

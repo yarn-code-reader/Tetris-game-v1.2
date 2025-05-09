@@ -7,6 +7,10 @@ States :: States(){}
 States::States(int noOfB = 0, std::vector<std::vector<Texture>> texture = {}, std::string bg = "allTextures\\default.png") : noOfButtons(noOfB) , bg(bg){
     //now copying 2d vectos of texture into each other
 
+    //now we need to resize the vectors to acess them warna error aa jaiga
+    textures.resize(noOfButtons, std::vector<Texture>(3));
+    statesOfBtn.resize(noOfButtons);
+
     for (int i = 0; i < noOfButtons; i++)
     {
         for (int j = 0; j < 3;j++) {
@@ -16,12 +20,12 @@ States::States(int noOfB = 0, std::vector<std::vector<Texture>> texture = {}, st
 
     //initalizing my sprites into the 1st state of buttons
     //states of button by deafult normal ha yaini ka 0
-    for (int i = 0; i < noOfButtons; i++)
-    {
-        sprites[i].setTexture(textures[i][0]);
-        statesOfBtn[i] = 0;
+    // issue is that default constructor for sprites doesnt exist 
+    for (int i = 0; i < noOfButtons; i++) {
+        sf::Sprite tempSprite(textures[i][0]);  // Create a temporary sprite object
+        sprites.push_back(tempSprite);  // Add the initialized sprite to the vector
+        statesOfBtn.push_back(0);  // Set the initial state to normal (0)
     }
-
 }
 // Initialize static members (important!)
 bool States::menuOpen = false;
@@ -79,6 +83,7 @@ void States::setExit(bool shouldExit) {
 }
 
 int States::onButtonClick(int index) {
+    cout << "on btn click of states" << endl;
     return 0;
 };
 
@@ -89,6 +94,19 @@ void States::checkEvents(sf::RenderWindow& win) {
         /// \note Converting the mouse position to world coordinates (if needed for sprites, buttons, etc.)
         Vector2f mouseWorldPos = win.mapPixelToCoords(mousePos);
 
+        cout << "mouse moved" << endl;
+        for (int i = 0; i < noOfButtons; i++)
+        {
+            if (sprites[i].getGlobalBounds().contains(mouseWorldPos))
+            {
+                updateStates(i,1);
+                break;
+            }
+            else {
+                updateStates(i, 0);
+            }
+        }
+
         if (myevent->is<sf::Event::Closed>())
             win.close();
         else if (auto* keyPressed = myevent->getIf<sf::Event::MouseButtonPressed>())
@@ -97,12 +115,17 @@ void States::checkEvents(sf::RenderWindow& win) {
             {
                 if (sprites[i].getGlobalBounds().contains(mouseWorldPos) )
                 {
+                    updateStates(i, 2);
+                    win.draw(sprites[i]);
+                    win.display();
+                    sleep(milliseconds(500));
                     if (onButtonClick(i) < 0) {
                         win.close();
                     }
                     break;
                 }
             }
+            cout << "----------------------" << endl << endl;
         }
 
     }
