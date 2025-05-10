@@ -2,10 +2,12 @@
 #include "block.h"
 #include "Menu.h"
 #include "Grid.h"
+#include "GameLoop.h"
 #include "GlobalVar.h"
 
 //gloval variables 
 int sizeOfBlock = 40;
+float scaleConstantOfBlocks = 0.985;
 
 int main()
 {
@@ -27,7 +29,7 @@ int main()
     }
     sf::RenderWindow window(sf::VideoMode({ 950, 700 }), "My window");
 
-    Grid grid(360.0, 40.0, 20 ,10);
+    Grid grid(360.0, 40.0, 14 ,10);
     grid.setBlockArray(arr_of_blocks);
 
 
@@ -46,9 +48,22 @@ int main()
      {Texture("allTextures\\menubtnExit.png"), Texture("allTextures\\menuExitbtnHover.png"), Texture("allTextures\\menuExitPressed.png")}
     };
 
+    Texture deleting_anim_1("allTextures\\anim1_1.png");
+    Texture deleting_anim_2("allTextures\\anim1_2.png");
+    Sprite deleting_anim_1_sprite(deleting_anim_1);
+    Sprite deleting_anim_2_sprite(deleting_anim_2);
+
+    GameLoop gameloop(&grid, "allTextures\\playscreen.png");
+    gameloop.makeAnimation(gameloop.getAnimationDeleting(), deleting_anim_1_sprite, deleting_anim_2_sprite, deleting_anim_2_sprite);
+
+
+
     Menu myMenu("allTextures\\menuBgWithoutButtons.png", menuBtnTextures, 4);
 
     // run the program as long as the window is open
+    gameloop.spawnPeice();
+
+    Clock clock;
     while (window.isOpen())
     {
         // check all the window's events that were triggered since the last iteration of the loop
@@ -59,16 +74,18 @@ int main()
                 window.close();
 
             myMenu.checkEvents(window);
+            gameloop.checkevents(window);
         }
 
-        sf::Texture txt("allTextures\\blockOfGrid.png");
-        Texture bg("allTextures\\playscreen.png");
-        Sprite menubg(bg);
         // clear the window with black color
+        float dt = clock.restart().asSeconds();  // Time since last frame
         window.clear(sf::Color::Black);
 
         if (States::isGameOpen()) {
             // start the game
+           // gameloop.StartGame();
+            gameloop.draw(window);
+            gameloop.update(dt);
         }
          else if (States::isOptionsOpen()) {
              // draw options
@@ -88,4 +105,3 @@ int main()
         window.display();
     }
 }
-

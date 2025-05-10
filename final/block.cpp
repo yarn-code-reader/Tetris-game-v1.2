@@ -1,4 +1,6 @@
 #include "block.h"
+#include "GlobalVar.h"
+
 block::block(string t = "allTextures\\blockOfGrid.png") :texture(t), sprite(texture){
 	if (!t.empty()) {
 		texture.loadFromFile(t);

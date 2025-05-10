@@ -143,8 +143,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="block.cpp" />
     <ClCompile Include="final.cpp" />
+    <ClCompile Include="GameLoop.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Menu.cpp" />
     <ClCompile Include="Peice.cpp" />
@@ -152,7 +154,9 @@
     <ClCompile Include="States.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="block.h" />
+    <ClInclude Include="GameLoop.h" />
     <ClInclude Include="GlobalVar.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Menu.h" />

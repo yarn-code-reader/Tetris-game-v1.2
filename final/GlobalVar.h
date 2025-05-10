@@ -4,4 +4,5 @@
 #define GLOBALS_H
 
 extern int sizeOfBlock;
+extern float scaleConstantOfBlocks;
 #endif

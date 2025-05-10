@@ -33,6 +33,7 @@ void Grid:: draw(sf::RenderWindow& window) {
 		{
 			Sprite sp = allBlock[activity_status[i][j]].getSprite();
 			sp.setPosition({ setx, sety });
+			sp.scale({ scaleConstantOfBlocks , scaleConstantOfBlocks });
 			window.draw(sp);
 			setx += sizeOfBlock;
 		}

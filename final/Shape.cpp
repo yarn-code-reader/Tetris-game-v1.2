@@ -110,7 +110,7 @@ void Z_Shape::rotate(int modify[4][2]) {
 T_Shape::T_Shape(float x = 240, float y = 100) {
 	this->x = x;
 	this->y = y;
-	type = 1;
+	type = 3;
 
 	int temp[4][2] = { {1, 0}, {0, 1}, {1, 1}, {2, 1} };
 	for (int i = 0; i < 4; i++) {
@@ -159,7 +159,7 @@ void T_Shape::rotate(int modify[4][2]) {
 S_Shape::S_Shape(float x = 240, float y = 100) {
 	this->x = x;
 	this->y = y;
-	type = 1;
+	type = 4;
 
 	int temp[4][2] = { {1, 0}, {2, 0}, {0, 1}, {1, 1} };
 
@@ -211,7 +211,7 @@ void S_Shape::rotate(int modify[4][2]) {
 O_Shape::O_Shape(float x = 240, float y = 100) {
 	this->x = x;
 	this->y = y;
-	type = 1;
+	type = 5;
 
 	int temp[4][2] = {
 	   {1,1},
@@ -237,7 +237,7 @@ void O_Shape::rotate(int modify[4][2]) {
 L_Shape::L_Shape(float x = 240, float y = 100) {
 	this->x = x;
 	this->y = y;
-	type = 1;
+	type = 6;
 
 	int temp[4][2] = { {2, 0}, {0, 1}, {1, 1}, {2, 1} };
 	for (int i = 0; i < 4; i++) {
@@ -287,7 +287,7 @@ void L_Shape::rotate(int modify[4][2]) {
 J_Shape::J_Shape(float x = 240, float y = 100) {
 	this->x = x;
 	this->y = y;
-	type = 1;
+	type = 7;
 
 	int temp[4][2] = { {0, 0}, {0, 1}, {1, 1}, {2, 1} };
 	for (int i = 0; i < 4; i++) {

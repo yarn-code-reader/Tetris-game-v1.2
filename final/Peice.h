@@ -1,5 +1,7 @@
 #pragma once
 #include "block.h"
+#include "GlobalVar.h"
+
 class Peice : public block
 {
 protected:
@@ -41,6 +43,25 @@ public:
 
     // Setter for rotationState
 	void setRotationState(int newRotationState);
+
+	virtual int getType() {
+		return type;
+	}
+
+	void setType(int n) {
+		type = n;
+	}
+	int(&getShape())[4][2]{
+	return shape;
+	}
+
+		void setSpriteOfPeice(block allBlocks) {
+		for (int i = 0; i < 4; i++)
+		{
+			this->sprite = allBlocks.getSprite();
+			sprite.scale({ scaleConstantOfBlocks , scaleConstantOfBlocks });
+		}
+	}
 };
 
 

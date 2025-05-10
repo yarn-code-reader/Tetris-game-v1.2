@@ -3,12 +3,13 @@
 
 
 	void  Peice:: draw(sf::RenderWindow& window) {
-
 		float globalX = 0, globalY = 0, setx = x, sety = y;
+		
 		for (int i = 0; i < 4; i++)
 		{
 			setx = (shape[i][0] * sizeOfBlock) + x;
 			sety = (shape[i][1] * sizeOfBlock) + y;
+			//sprite.scale({ scaleConstantOfBlocks , scaleConstantOfBlocks });
 			sprite.setPosition({ setx, sety });
 			window.draw(sprite);
 		}

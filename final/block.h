@@ -1,6 +1,8 @@
 #pragma once
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "GlobalVar.h"
+
 using namespace std;
 using namespace sf;
 

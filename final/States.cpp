@@ -32,7 +32,7 @@ bool States::menuOpen = false;
 bool States::optionsOpen = false;
 bool States::htpOpen = false;
 bool States::exit = false;
-bool States::gameOpen = false;
+bool States::gameOpen = true;
 bool States::pauseScreenOpen = false;
 // Getter implementations
 bool States::isMenuOpen() {
@@ -94,7 +94,6 @@ void States::checkEvents(sf::RenderWindow& win) {
         /// \note Converting the mouse position to world coordinates (if needed for sprites, buttons, etc.)
         Vector2f mouseWorldPos = win.mapPixelToCoords(mousePos);
 
-        cout << "mouse moved" << endl;
         for (int i = 0; i < noOfButtons; i++)
         {
             if (sprites[i].getGlobalBounds().contains(mouseWorldPos))
@@ -115,10 +114,10 @@ void States::checkEvents(sf::RenderWindow& win) {
             {
                 if (sprites[i].getGlobalBounds().contains(mouseWorldPos) )
                 {
-                    updateStates(i, 2);
+                   updateStates(i, 2);
                     win.draw(sprites[i]);
                     win.display();
-                    sleep(milliseconds(500));
+                    sleep(milliseconds(5000));
                     if (onButtonClick(i) < 0) {
                         win.close();
                     }

@@ -16,6 +16,17 @@ public:
 	void draw(sf::RenderWindow& window);
 	void setBlockArray(block b[8]);
 	void resetGrid();
+	block& getAllBlocks(int i) {
+		return allBlock[i];
+	}
+
+	float getStartx() {
+		return startx;
+	}
+
+	float getStarty() {
+		return starty;
+	}
 };
 
 
