@@ -12,7 +12,8 @@ class GameLoop
 public:
     Grid* grid;
     Peice* peice;
-    Peice* next_peice;
+    Peice* next_peices[3];
+    Vector2f coordinates[3];
     Animation placing;
     Animation deleting;
     Texture bgTexture;
@@ -23,73 +24,104 @@ public:
     float fallDelay = 1.0f; // seconds between drops
     float timer = 0.0;
     bool PeiceColided = false;
-    int rowToBeDel = 0;
+    int next_peices_count = 3;
 
 public:
+    GameLoop(Grid * grid = nullptr, string t = "") : peice(nullptr), grid(grid), bgTexture(t), isRunning(true), score(0), lines(0), levels(0), fallDelay(1.0), timer(0), PeiceColided(false){}
 
-    GameLoop() : peice(nullptr), next_peice(nullptr), grid(nullptr), isRunning(true) {
-
-    }
-
-    GameLoop(Grid * grid = nullptr, string t = "") : peice(nullptr), next_peice(nullptr), grid(grid), bgTexture(t), isRunning(true){
-
-    }
+    
     bool isrunningTrue() {
         return isRunning;
     }
 
     void StartGame() {
-       
         spawnPeice();
-
     }
 
-    void spawnPeice() {
-        srand(time(0));
+    void create_a_peice(Peice *& p) {
+       // srand(time(0));
         int randomnumber = rand() % 7;
-        float peiceStartx = grid->getStartx() + 3 * sizeOfBlock;
-        float peiceStarty = grid->getStarty();
-        cout << randomnumber << endl;
-        if (peice != nullptr) {
-            delete peice;
-        }
+        //dummy values
+        float peiceStartx = 10, peiceStarty = 10;
 
+        cout << randomnumber << endl;
         if (randomnumber == 0) {
             cout << "Creating I-shape" << endl;
-            peice = new I_Shape(peiceStartx, peiceStarty);
+            p = new I_Shape(peiceStartx, peiceStarty);
         }
         else if (randomnumber == 1) {
             cout << "Creating J-shape" << endl;
-            peice = new J_Shape(peiceStartx, peiceStarty);
+            p = new J_Shape(peiceStartx, peiceStarty);
         }
         else if (randomnumber == 2) {
             cout << "Creating L-shape" << endl;
-            peice = new L_Shape(peiceStartx, peiceStarty);
+            p = new L_Shape(peiceStartx, peiceStarty);
         }
         else if (randomnumber == 3) {
             cout << "Creating O-shape" << endl;
-            peice = new O_Shape(peiceStartx, peiceStarty);
+            p = new O_Shape(peiceStartx, peiceStarty);
         }
         else if (randomnumber == 4) {
             cout << "Creating S-shape" << endl;
-            peice = new S_Shape(peiceStartx, peiceStarty);
+            p = new S_Shape(peiceStartx, peiceStarty);
         }
         else if (randomnumber == 5) {
             cout << "Creating T-shape" << endl;
-            peice = new T_Shape(peiceStartx, peiceStarty);
+            p = new T_Shape(peiceStartx, peiceStarty);
         }
         else if (randomnumber == 6) {
             cout << "Creating Z-shape" << endl;
-            peice = new Z_Shape(peiceStartx, peiceStarty);
+            p = new Z_Shape(peiceStartx, peiceStarty);
         }
         else {
             cout << "Invalid random number: " << randomnumber << endl;
         }
+        p->setSpriteOfPeice(grid->getAllBlocks(p->getType()));
+
+    }
+
+    void generatePeices() {
+       //initalize the array with three ointers, only to be called once 
+        //outside of gameloop
+        for (int i = 0; i < next_peices_count; i++)
+        {
+            create_a_peice(next_peices[i]);
+             coordinates[i].x = 50 + (i * 235);
+             coordinates[i].y = 600;
+        }
+    }
+
+    void shift_array_left() {
+        for (int i = 0; i < next_peices_count - 1; i++)
+        {
+            next_peices[i] = next_peices[i + 1];
+        }
+
+        create_a_peice(next_peices[next_peices_count - 1]);
+    }
+
+    void spawnPeice() {
+        float peiceStartx = grid->getStartx() + 3 * sizeOfBlock;
+        float peiceStarty = grid->getStarty();
+
+        if (peice != nullptr) {
+            delete peice;
+        }
+
+        if(next_peices[0] != nullptr) {
+            peice = next_peices[0];
+        }
+        else {
+            cout << "next_peices[0] is a nullptr" << endl;
+            return;
+        }
+        shift_array_left();
+        peice->setX(peiceStartx);
+        peice->setY(peiceStarty);
 
         int typeOfPeice = peice->getType();
         cout << "peice type: " << typeOfPeice << endl;
-        peice->setSpriteOfPeice(grid->getAllBlocks(typeOfPeice));
-     //   peice->setType(randomnumber + 1);
+     //   peice->setSpriteOfPeice(grid->getAllBlocks(typeOfPeice));
 
         int yOfPeice = 0, xOfPeice = 0;
         for (int i = 0; i < 4;i++)
@@ -313,7 +345,6 @@ public:
                 cout << "Clear A row" << endl;
                 score += 100;
                 lines += 1;
-                rowToBeDel = i;
                 deleting.reset();
                 update_level();
                 clear_row(i);
@@ -334,8 +365,13 @@ public:
         while (const std::optional event = win.pollEvent())
         {
             // "close requested" event: we close the window
+            Vector2i mousePos = Mouse::getPosition(win);
+            /// \note Converting the mouse position to world coordinates (if needed for sprites, buttons, etc.)
+            Vector2f mouseWorldPos = win.mapPixelToCoords(mousePos);
+            cout << mouseWorldPos.x << "\t" << mouseWorldPos.y << endl;
             if (event->is<sf::Event::Closed>())
                 win.close();
+           
             else if (auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
             {
                 if (isRunning)
@@ -461,6 +497,26 @@ public:
                 peice->draw(window);
             }
         }
+
+        // drawing peices array
+        for (int i = 0; i < next_peices_count; i++)
+        {
+            if (next_peices[i] != nullptr) {
+              //  cout << "drawing " << "\t" << next_peices[i]->getType()<<"\t" << next_peices[i]->getX() << "\t" << next_peices[i]->getY() << endl;
+                next_peices[i]->setX(coordinates[i].x);
+                next_peices[i]->setY(coordinates[i].y);
+                next_peices[i]->draw(window);
+            }
+        }
+     //   cout << "-------" << endl;
+
+        // drawing hold peics
+
+        // drawing levels
+
+        // drawing score
+
+        // drawing lines
     }
 
     void update(float dt) {

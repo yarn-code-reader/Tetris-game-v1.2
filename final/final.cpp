@@ -61,6 +61,7 @@ int main()
     Menu myMenu("allTextures\\menuBgWithoutButtons.png", menuBtnTextures, 4);
 
     // run the program as long as the window is open
+    gameloop.generatePeices();
     gameloop.spawnPeice();
 
     Clock clock;
