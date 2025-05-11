@@ -29,14 +29,14 @@ int main()
     }
     sf::RenderWindow window(sf::VideoMode({ 950, 700 }), "My window");
 
-    Grid grid(360.0, 40.0, 14 ,10);
+    Grid grid(360.0, 40.0, 14, 10);
     grid.setBlockArray(arr_of_blocks);
 
 
 
     //intializing menu objetcs
     States* currentState = new States[4]{
-    Menu(), 
+    Menu(),
    Menu(),
    Menu(),
    Menu()
@@ -64,18 +64,20 @@ int main()
     gameloop.spawnPeice();
 
     Clock clock;
+
     while (window.isOpen())
     {
         // check all the window's events that were triggered since the last iteration of the loop
-        while (const std::optional event = window.pollEvent())
-        {
-            // "close requested" event: we close the window
-            if (event->is<sf::Event::Closed>())
-                window.close();
 
+
+        if (States::isMenuOpen()) {
             myMenu.checkEvents(window);
+        }
+        else if (States::isGameOpen()) {
             gameloop.checkevents(window);
         }
+
+
 
         // clear the window with black color
         float dt = clock.restart().asSeconds();  // Time since last frame
@@ -87,15 +89,16 @@ int main()
             gameloop.draw(window);
             gameloop.update(dt);
         }
-         else if (States::isOptionsOpen()) {
-             // draw options
-        }else if (States::isHtpOpen()) {
+        else if (States::isOptionsOpen()) {
+            // draw options
+        }
+        else if (States::isHtpOpen()) {
             // draw how to play
         }
         else if (States::isPauseScreenOpen()) {
             // pause screen
         }
-        else  {
+        else {
             // draw menu 
             myMenu.drawMenu(window);
         }
@@ -104,4 +107,5 @@ int main()
         // end the current frame
         window.display();
     }
+
 }

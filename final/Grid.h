@@ -3,7 +3,7 @@
 class Grid 
 {
 public:
-	int activity_status[20][10] = { 0 };
+	int activity_status[14][10] = { 0 };
 	float startx;
 	float starty;
 	int maxRow ;

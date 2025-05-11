@@ -8,7 +8,7 @@ class Animation
     vector<Sprite> frames;
     float totalTime;
     int animFrame = 0;
-    float animStepDur = 0.1;
+    float animStepDur = 0.2;
     bool animationLock = false;
 
 public:

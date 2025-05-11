@@ -86,8 +86,9 @@ public:
             cout << "Invalid random number: " << randomnumber << endl;
         }
 
-        cout << "peice type: " << peice->getType() << endl;
-        peice->setSpriteOfPeice(grid->getAllBlocks(peice->getType()));
+        int typeOfPeice = peice->getType();
+        cout << "peice type: " << typeOfPeice << endl;
+        peice->setSpriteOfPeice(grid->getAllBlocks(typeOfPeice));
      //   peice->setType(randomnumber + 1);
 
         int yOfPeice = 0, xOfPeice = 0;
@@ -100,6 +101,12 @@ public:
                 cout << "GAME OVER" << endl;
             }
         }
+
+        makeAnimation(
+            getAnimationPlacing(),
+            grid->getAllBlocks(typeOfPeice).getSprite(),
+            grid->getAllBlocks(typeOfPeice).getSprite(),
+            grid->getAllBlocks(typeOfPeice).getSprite());
     }
 
     int calculating_x_off_set(int x) {
@@ -149,7 +156,9 @@ public:
             xOfPeice = ((peice->getX() + (peicex * sizeOfBlock)) - (grid->startx + sizeOfBlock)) / sizeOfBlock;;
             yOfPeice = ((peice->getY() + (peicey * sizeOfBlock)) - (grid->starty)) / sizeOfBlock;;
 
+
             grid->activity_status[yOfPeice][xOfPeice] = peice->getType();
+            cout << "type in grid " << peice->getType();
 
             //       grid->print();
               //     cout << endl;
@@ -158,7 +167,6 @@ public:
         }
     }
     void move_the_peice_down() {
-        cout << "1\n";
         // basically send
         if (isRunning) {
             if (detectCollission(1)) {
@@ -323,46 +331,51 @@ public:
 
     void checkevents(RenderWindow& win)
     {
-        if (const std::optional myevent = win.pollEvent())
+        while (const std::optional event = win.pollEvent())
         {
-            if (myevent->is<sf::Event::Closed>())
+            // "close requested" event: we close the window
+            if (event->is<sf::Event::Closed>())
                 win.close();
-            else if (auto* keyPressed = myevent->getIf<sf::Event::KeyPressed>())
+            else if (auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
             {
-                cout << "Key pressed" << endl;
-                if (keyPressed->scancode == sf::Keyboard::Scancode::Z)
+                if (isRunning)
                 {
-                    updateSpeed();
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::Up)
-                {
-                    rotate_the_peice();
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::Down)
-                {
-                    move_the_peice_down();
-                    move_the_peice_down();
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::Right)
-                {
-                    move_the_peice_right();
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::Left)
-                {
-                    move_the_peice_left();
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::A)
-                {
-                    spawnPeice();
-                }
-                else if (keyPressed->scancode == sf::Keyboard::Scancode::Space)
-                {
-                    hardDrop();
-                }
+                    if (keyPressed->scancode == sf::Keyboard::Scancode::Z)
+                    {
+                        updateSpeed();
+                    }
+                    else if (keyPressed->scancode == sf::Keyboard::Scancode::Up)
+                    {
+                        rotate_the_peice();
 
+                    }
+                    else if (keyPressed->scancode == sf::Keyboard::Scancode::Down)
+                    {
+                        move_the_peice_down();
+                        move_the_peice_down();
+                    }
+                    else if (keyPressed->scancode == sf::Keyboard::Scancode::Right)
+                    {
+                        move_the_peice_right();
+                    }
+                    else if (keyPressed->scancode == sf::Keyboard::Scancode::Left)
+                    {
+                        move_the_peice_left();
+                    }
+                    else if (keyPressed->scancode == sf::Keyboard::Scancode::A)
+                    {
+                        spawnPeice();
+                    }
+                    else if (keyPressed->scancode == sf::Keyboard::Scancode::Space)
+                    {
+                        hardDrop();
+                    }
+                }
             }
         }
     }
+
+
     Animation& getAnimationPlacing() {
         return placing;
     }
@@ -388,33 +401,38 @@ public:
         if (grid) {
             if (deleting.isAnimationLocked()) {
                 // draw the current flash?frame for each block
-                float setx = 0, sety = 100;
-                Sprite regularGridBlock(grid->getAllBlocks(0).getSprite());
+                float setx = grid->startx, sety = grid->starty;
+               
 
-                for (int i = 0; i < 20; ++i) {
+                for (int i = 0; i < grid->maxRow; ++i) {
                     setx = grid->startx + sizeOfBlock;
-                    for (int j = 0; j < 10; ++j)
+                    for (int j = 0; j < grid->maxCol; ++j)
                     {
                         //  cout << "setx " << setx << "\tsety " << sety << endl;
                         if (grid->activity_status[i][j] == 0) {
+                            Sprite regularGridBlock(grid->getAllBlocks(0).getSprite());
                             regularGridBlock.setPosition(
                                 { setx , sety }
                             );
+                            regularGridBlock.scale({ scaleConstantOfBlocks , scaleConstantOfBlocks });
                             window.draw(regularGridBlock);
                             setx += sizeOfBlock;
                             continue;
                         }
                         Sprite cell = deleting.getFrames()[deleting.getAnimFrame()];
+                        
                         cout << "while drawing deleting anim frame = " << deleting.getAnimFrame() << endl;
                         cell.setPosition(
                             { setx , sety }
                         );
+                        cell.scale({ 0.157 , 0.157 });
                         window.draw(cell);
+                       
                         setx += sizeOfBlock;
                     }
                     sety += sizeOfBlock;
                 }
-
+            //    sleep(milliseconds(2000));
 
             }
             else {
@@ -426,17 +444,18 @@ public:
             if (placing.isAnimationLocked()) {
                 // draw the current flash?frame for each block
                 for (int i = 0; i < 4; ++i) {
-                    Sprite cell = grid->getAllBlocks(peice->getType()).getSprite() ;
-                    Color color = cell.getColor();
-                    color.a = 128;
+                    /*Sprite cell = placing.getFrames()[placing.getAnimFrame()];
+                  //  Color color = cell.getColor();
+                //    color.a = 128;
                     float x = peice->getX() + peice->getShape()[i][0] * sizeOfBlock;
                     float y = peice->getY() + peice->getShape()[i][1] * sizeOfBlock;
                     cell.setPosition(
                         { x , y }
                     );
                     cell.scale({ scaleConstantOfBlocks , scaleConstantOfBlocks });
-                    window.draw(cell);
+                    window.draw(cell);*/
                 }
+                cout << endl;
             }
             else {
                 peice->draw(window);
