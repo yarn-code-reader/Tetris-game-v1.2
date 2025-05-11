@@ -9,7 +9,7 @@ Menu ::Menu(std::string bgTexture = "allTextures\\default.png", vector<vector<Te
 
 
 
-void Menu::drawMenu(sf::RenderWindow& win) {
+void Menu::drawScreen(sf::RenderWindow& win) {
     Sprite menuKaBg(bg);
     //scaling kar rahe take scren pa sab fit aa sake
     float x = win.getSize().x, y = win.getSize().y;

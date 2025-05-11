@@ -1,6 +1,7 @@
 #pragma once
 #include "block.h"
 #include "Menu.h"
+#include "Pause.h"
 #include "Grid.h"
 #include "GameLoop.h"
 #include "GlobalVar.h"
@@ -35,12 +36,7 @@ int main()
 
 
     //intializing menu objetcs
-    States* currentState = new States[4]{
-    Menu(),
-   Menu(),
-   Menu(),
-   Menu()
-    };
+  
     vector<vector<Texture>> menuBtnTextures = {
      {Texture("allTextures\\menuPlayBtn.png"), Texture("allTextures\\menuPlayHover.png"), Texture("allTextures\\menuPlaybtnPressed.png")},
      {Texture("allTextures\\menubtnOpt.png"), Texture("allTextures\\menuOptHover.png"), Texture("allTextures\\menuOptPressed.png")},
@@ -53,15 +49,15 @@ int main()
     Sprite deleting_anim_1_sprite(deleting_anim_1);
     Sprite deleting_anim_2_sprite(deleting_anim_2);
 
-    GameLoop gameloop(&grid, "allTextures\\playscreen.png");
+    GameLoop gameloop(&grid, "allTextures\\playscreen.png", "fonts\\Rockwell-Cond.ttf");
     gameloop.makeAnimation(gameloop.getAnimationDeleting(), deleting_anim_1_sprite, deleting_anim_2_sprite, deleting_anim_2_sprite);
 
 
 
     Menu myMenu("allTextures\\menuBgWithoutButtons.png", menuBtnTextures, 4);
-
+    Pause pause("allTextures\\pausescreen.png");
     // run the program as long as the window is open
-    gameloop.generatePeices();
+    
     gameloop.spawnPeice();
 
     Clock clock;
@@ -77,6 +73,10 @@ int main()
         else if (States::isGameOpen()) {
             gameloop.checkevents(window);
         }
+        else if (States::isPauseScreenOpen()) {
+            pause.checkevents(window);
+        }
+       
 
 
 
@@ -98,10 +98,11 @@ int main()
         }
         else if (States::isPauseScreenOpen()) {
             // pause screen
+            pause.drawScreen(window);
         }
         else {
             // draw menu 
-            myMenu.drawMenu(window);
+            myMenu.drawScreen(window);
         }
 
 

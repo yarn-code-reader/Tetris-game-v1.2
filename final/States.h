@@ -1,4 +1,5 @@
 #pragma once
+
 #include <SFML/Graphics.hpp>
 using namespace sf;
 class States
@@ -44,4 +45,6 @@ public:
             statesOfBtn[i] = state;
             sprites[i].setTexture(textures[i][statesOfBtn[i]]);
     }
+
+    virtual void drawScreen(RenderWindow& win);
 };

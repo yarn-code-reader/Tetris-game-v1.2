@@ -28,13 +28,17 @@ States::States(int noOfB = 0, std::vector<std::vector<Texture>> texture = {}, st
     }
 }
 // Initialize static members (important!)
-bool States::menuOpen = false;
+bool States::menuOpen = true;
 bool States::optionsOpen = false;
 bool States::htpOpen = false;
 bool States::exit = false;
-bool States::gameOpen = true;
+bool States::gameOpen = false;
 bool States::pauseScreenOpen = false;
 // Getter implementations
+
+ void States:: drawScreen(RenderWindow& win) {
+    cout << "draw screen of base class" << endl;
+}
 bool States::isMenuOpen() {
     return menuOpen;
 }

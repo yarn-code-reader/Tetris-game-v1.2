@@ -2,10 +2,12 @@
 #include "Peice.h"
 #include "Grid.h"
 #include "Shape.h"
+#include "States.h"
 #include "Animation.h"
 #include "GlobalVar.h"
 #include <cstdlib>
 #include <ctime>
+#include <sstream>
 
 class GameLoop
 {
@@ -20,15 +22,36 @@ public:
     bool isRunning = true;
     int score = 0;
     int lines = 0;
-    int levels = 0;
+    int levels = 1;
     float fallDelay = 1.0f; // seconds between drops
     float timer = 0.0;
     bool PeiceColided = false;
     int next_peices_count = 3;
+    sf::Text scoreOnScreen;
+    sf::Text levelOnScreen;
+    sf::Text linesOnScreen;
+    Font font;
+    int fontSize;
+    stringstream tempStream;
 
 public:
-    GameLoop(Grid * grid = nullptr, string t = "") : peice(nullptr), grid(grid), bgTexture(t), isRunning(true), score(0), lines(0), levels(0), fallDelay(1.0), timer(0), PeiceColided(false){}
+    GameLoop(Grid * grid = nullptr, string t = "", string f = "") : peice(nullptr), grid(grid),
+        bgTexture(t), isRunning(true), score(0), lines(0), levels(0), fallDelay(1.0), 
+        timer(0), PeiceColided(false), font(f), scoreOnScreen(font, "0", fontSize),
+        levelOnScreen( font, "0", fontSize) , linesOnScreen( font, "0", fontSize) {
+        generatePeices();
 
+        scoreOnScreen.setFillColor(Color(244,244,186));
+        scoreOnScreen.setPosition({ 175,110 });
+
+        levelOnScreen.setFillColor(Color(244, 244, 186));
+        levelOnScreen.setPosition({ 175,185 });
+
+        linesOnScreen.setFillColor(Color(244, 244, 186));
+        linesOnScreen.setPosition({ 175,265 });
+        // set attributes of text 
+
+    }
     
     bool isrunningTrue() {
         return isRunning;
@@ -318,6 +341,12 @@ public:
         cout << fallDelay << endl;
     }
 
+   void update_text(Text & t , int demo) {
+        tempStream.str("");
+        tempStream.clear();
+        tempStream << demo;
+        t.setString(tempStream.str());
+    }
     void update_level() {
         if (lines == 10) {
             levels++;
@@ -326,6 +355,9 @@ public:
                 fallDelay = 1.0f;
             }
             lines = 0;
+            update_text(levelOnScreen, levels);
+            update_text(linesOnScreen, lines);
+
             updateSpeed();
         }
     }
@@ -345,6 +377,10 @@ public:
                 cout << "Clear A row" << endl;
                 score += 100;
                 lines += 1;
+
+                update_text(scoreOnScreen, score);
+                update_text(linesOnScreen, lines);
+
                 deleting.reset();
                 update_level();
                 clear_row(i);
@@ -369,7 +405,8 @@ public:
             /// \note Converting the mouse position to world coordinates (if needed for sprites, buttons, etc.)
             Vector2f mouseWorldPos = win.mapPixelToCoords(mousePos);
             cout << mouseWorldPos.x << "\t" << mouseWorldPos.y << endl;
-            if (event->is<sf::Event::Closed>())
+
+                      if (event->is<sf::Event::Closed>())
                 win.close();
            
             else if (auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
@@ -405,6 +442,17 @@ public:
                     else if (keyPressed->scancode == sf::Keyboard::Scancode::Space)
                     {
                         hardDrop();
+                    }
+                    else if (keyPressed->scancode == sf::Keyboard::Scancode::S)
+                    {
+                        cout << "Score" << score << endl;
+                        cout << "lines" << lines << endl;
+                        cout << "level" << levels << endl;
+                    }
+                    else if (keyPressed->scancode == sf::Keyboard::Scancode::P)
+                    {
+                        States::setPauseScreenOpen(true);
+                        States::setGameOpen(false);
                     }
                 }
             }
@@ -511,12 +559,15 @@ public:
      //   cout << "-------" << endl;
 
         // drawing hold peics
-
+        // 
         // drawing levels
+        window.draw(levelOnScreen);
 
         // drawing score
+        window.draw(scoreOnScreen);
 
         // drawing lines
+        window.draw(linesOnScreen);
     }
 
     void update(float dt) {
