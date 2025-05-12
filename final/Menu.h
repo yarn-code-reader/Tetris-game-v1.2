@@ -10,7 +10,7 @@ class Menu : public States
 public:
 	// default constructor
 	Menu();
-	Menu(std::string bgTexture, vector<vector<Texture>> texture , int noOfB);
+	Menu(std::string bgTexture,vector<Texture> texture , int noOfB);
 	void drawScreen(sf::RenderWindow& win);
 	int onButtonClick(int index) ;
 };

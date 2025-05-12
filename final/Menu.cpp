@@ -1,6 +1,6 @@
 #include "Menu.h"
 Menu :: Menu(){}
-Menu ::Menu(std::string bgTexture = "allTextures\\default.png", vector<vector<Texture>> texture = {}, int noOfB = 0) : States(noOfB, texture, bgTexture) {
+Menu ::Menu(std::string bgTexture = "allTextures\\default.png", vector<Texture> texture = {}, int noOfB = 0) : States(noOfB, texture, bgTexture) {
     for (int i = 0; i < noOfButtons; i++)
     {
         sprites[i].scale({ 0.75, 0.75 });
@@ -10,16 +10,8 @@ Menu ::Menu(std::string bgTexture = "allTextures\\default.png", vector<vector<Te
 
 
 void Menu::drawScreen(sf::RenderWindow& win) {
-    Sprite menuKaBg(bg);
-    //scaling kar rahe take scren pa sab fit aa sake
+    States::drawScreen(win);
     float x = win.getSize().x, y = win.getSize().y;
-    menuKaBg.scale({ x / bg.getSize().x,  y / bg.getSize().y });
-
-    win.clear();
-
-    // draw background
-    win.draw(menuKaBg);
-    // draw buttons 
 
     for (int i = 0; i < noOfButtons; i++)
     {
@@ -31,6 +23,16 @@ void Menu::drawScreen(sf::RenderWindow& win) {
         float ybtn = 120.0 + (i * (btnHeight + 15));  // Vertical spacing based on button height
 
         // Set position and draw
+        if (statesOfBtn[i] == 0)
+        {
+            sprites[i].setTextureRect((sf::IntRect({ 0, 0 }, { 144, 127 })));
+        }else if (statesOfBtn[i] == 1)
+        {
+            sprites[i].setTextureRect((sf::IntRect({ 0, 127 }, { 144, 127 })));
+        }else if (statesOfBtn[i] == 2)
+        {
+            sprites[i].setTextureRect((sf::IntRect({ 0, 254 }, { 144, 127 })));
+        }
         sprites[i].setPosition({ xbtn, ybtn });
         win.draw(sprites[i]);
     }

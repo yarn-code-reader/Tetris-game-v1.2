@@ -31,7 +31,8 @@ public:
     vector<Sprite>& getFrames() {
         return frames;
     }
-    void setRectangles(Sprite pic1, Sprite pic2, Sprite  pic3) {
+    void setRectangles(Sprite& pic1, Sprite& pic2, Sprite&  pic3) {
+        frames.clear();
         sf::Sprite tempSprite(pic1);  // Create a temporary sprite object
         frames.push_back(tempSprite);
 

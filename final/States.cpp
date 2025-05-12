@@ -4,25 +4,25 @@ using namespace std;
 
 States :: States(){}
 //{} basically initalizes a 2d vector of textuere emty textures
-States::States(int noOfB = 0, std::vector<std::vector<Texture>> texture = {}, std::string bg = "allTextures\\default.png") : noOfButtons(noOfB) , bg(bg){
+States::States(int noOfB = 0, vector<Texture> texture = {}, std::string bg = "allTextures\\default.png") : noOfButtons(noOfB) , bg(bg){
     //now copying 2d vectos of texture into each other
 
     //now we need to resize the vectors to acess them warna error aa jaiga
-    textures.resize(noOfButtons, std::vector<Texture>(3));
+    textures.resize(noOfButtons);
     statesOfBtn.resize(noOfButtons);
 
     for (int i = 0; i < noOfButtons; i++)
     {
-        for (int j = 0; j < 3;j++) {
-            textures[i][j] = texture[i][j];
-        }
+       
+            textures[i] = texture[i];
+        
     }
 
     //initalizing my sprites into the 1st state of buttons
     //states of button by deafult normal ha yaini ka 0
     // issue is that default constructor for sprites doesnt exist 
     for (int i = 0; i < noOfButtons; i++) {
-        sf::Sprite tempSprite(textures[i][0]);  // Create a temporary sprite object
+        sf::Sprite tempSprite(textures[i]);  // Create a temporary sprite object
         sprites.push_back(tempSprite);  // Add the initialized sprite to the vector
         statesOfBtn.push_back(0);  // Set the initial state to normal (0)
     }
@@ -37,7 +37,17 @@ bool States::pauseScreenOpen = false;
 // Getter implementations
 
  void States:: drawScreen(RenderWindow& win) {
-    cout << "draw screen of base class" << endl;
+    Sprite ScreenKaBg(bg);
+    //scaling kar rahe take scren pa sab fit aa sake
+    float x = win.getSize().x, y = win.getSize().y;
+    ScreenKaBg.scale({ x / bg.getSize().x,  y / bg.getSize().y });
+
+    win.clear();
+
+    // draw background
+    win.draw(ScreenKaBg);
+    
+
 }
 bool States::isMenuOpen() {
     return menuOpen;
@@ -102,11 +112,15 @@ void States::checkEvents(sf::RenderWindow& win) {
         {
             if (sprites[i].getGlobalBounds().contains(mouseWorldPos))
             {
-                updateStates(i,1);
+                // hover state
+               // updateStates(i,1);
+                statesOfBtn[i] = 1;
                 break;
             }
             else {
-                updateStates(i, 0);
+                //orignal state
+                statesOfBtn[i] = 0;
+               // updateStates(i);
             }
         }
 
@@ -118,17 +132,19 @@ void States::checkEvents(sf::RenderWindow& win) {
             {
                 if (sprites[i].getGlobalBounds().contains(mouseWorldPos) )
                 {
-                   updateStates(i, 2);
+                    //preseed state
+                    statesOfBtn[i] = 2;
+                   updateStates(i);
                     win.draw(sprites[i]);
                     win.display();
-                    sleep(milliseconds(5000));
+                    sleep(milliseconds(500));
                     if (onButtonClick(i) < 0) {
                         win.close();
                     }
                     break;
                 }
             }
-            cout << "----------------------" << endl << endl;
+           // cout << "----------------------" << endl << endl;
         }
 
     }

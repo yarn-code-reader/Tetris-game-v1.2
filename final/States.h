@@ -13,14 +13,14 @@ protected:
     static bool pauseScreenOpen;
 
     int noOfButtons;
-    std::vector<std::vector<Texture>> textures;
+    std::vector<Texture> textures;
     std::vector<Sprite> sprites;
     std::vector<int>statesOfBtn;
     Texture bg;
     
 public:
     States();
-    States(int noOfB, std::vector<std::vector<Texture>> texture, std::string bg);
+    States(int noOfB, std::vector<Texture> texture, std::string bg);
     // Getters
     static bool isMenuOpen();
     static bool isOptionsOpen();
@@ -40,10 +40,20 @@ public:
      virtual int onButtonClick(int index);
     void checkEvents(sf::RenderWindow& win);
 
-    void updateStates(int i , int state) {
-        
-            statesOfBtn[i] = state;
-            sprites[i].setTexture(textures[i][statesOfBtn[i]]);
+    void updateStates(int i) {
+          
+            if (statesOfBtn[i] == 0)
+            {
+                sprites[i].setTextureRect((sf::IntRect({ 0, 0 }, { 144, 127 })));
+            }
+            else if (statesOfBtn[i] == 1)
+            {
+                sprites[i].setTextureRect((sf::IntRect({ 0, 127 }, { 144, 127 })));
+            }
+            else if (statesOfBtn[i] == 2)
+            {
+                sprites[i].setTextureRect((sf::IntRect({ 0, 254 }, { 144, 127 })));
+            }
     }
 
     virtual void drawScreen(RenderWindow& win);

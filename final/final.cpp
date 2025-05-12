@@ -9,6 +9,8 @@
 //gloval variables 
 int sizeOfBlock = 40;
 float scaleConstantOfBlocks = 0.985;
+float winW = 950;
+float winH = 700;
 
 int main()
 {
@@ -37,12 +39,15 @@ int main()
 
     //intializing menu objetcs
   
-    vector<vector<Texture>> menuBtnTextures = {
-     {Texture("allTextures\\menuPlayBtn.png"), Texture("allTextures\\menuPlayHover.png"), Texture("allTextures\\menuPlaybtnPressed.png")},
-     {Texture("allTextures\\menubtnOpt.png"), Texture("allTextures\\menuOptHover.png"), Texture("allTextures\\menuOptPressed.png")},
-     {Texture("allTextures\\menuHTPbtn.png"), Texture("allTextures\\menuHTPHover.png"), Texture("allTextures\\menuHTPPressed.png")},
-     {Texture("allTextures\\menubtnExit.png"), Texture("allTextures\\menuExitbtnHover.png"), Texture("allTextures\\menuExitPressed.png")}
+    vector<Texture> menuBtnTextures = {
+     Texture("allTextures\\playbtnStates.png"),
+     Texture("allTextures\\optionbtn.png"),
+     Texture("allTextures\\htpStates.png"), 
+     Texture("allTextures\\highscorestates.png"),
+     Texture("allTextures\\exitStates.png")
     };
+
+
 
     Texture deleting_anim_1("allTextures\\anim1_1.png");
     Texture deleting_anim_2("allTextures\\anim1_2.png");
@@ -54,8 +59,8 @@ int main()
 
 
 
-    Menu myMenu("allTextures\\menuBgWithoutButtons.png", menuBtnTextures, 4);
-    Pause pause("allTextures\\pausescreen.png");
+    Menu myMenu("allTextures\\menuBgWithoutButtons.png", menuBtnTextures, 5);
+    Pause pause("allTextures\\pausescreen.png", arr_of_blocks);
     // run the program as long as the window is open
     
     gameloop.spawnPeice();

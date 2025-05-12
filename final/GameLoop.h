@@ -39,6 +39,8 @@ public:
         bgTexture(t), isRunning(true), score(0), lines(0), levels(0), fallDelay(1.0), 
         timer(0), PeiceColided(false), font(f), scoreOnScreen(font, "0", fontSize),
         levelOnScreen( font, "0", fontSize) , linesOnScreen( font, "0", fontSize) {
+       
+        srand(time(0));
         generatePeices();
 
         scoreOnScreen.setFillColor(Color(244,244,186));
@@ -143,8 +145,13 @@ public:
         peice->setY(peiceStarty);
 
         int typeOfPeice = peice->getType();
-        cout << "peice type: " << typeOfPeice << endl;
+        cout << "peice type before assigning animation: " << typeOfPeice << endl;
      //   peice->setSpriteOfPeice(grid->getAllBlocks(typeOfPeice));
+        makeAnimation(
+            getAnimationPlacing(),
+            grid->getAllBlocks(typeOfPeice).getSprite(),
+            grid->getAllBlocks(typeOfPeice).getSprite(),
+            grid->getAllBlocks(typeOfPeice).getSprite());
 
         int yOfPeice = 0, xOfPeice = 0;
         for (int i = 0; i < 4;i++)
@@ -157,11 +164,7 @@ public:
             }
         }
 
-        makeAnimation(
-            getAnimationPlacing(),
-            grid->getAllBlocks(typeOfPeice).getSprite(),
-            grid->getAllBlocks(typeOfPeice).getSprite(),
-            grid->getAllBlocks(typeOfPeice).getSprite());
+       
     }
 
     int calculating_x_off_set(int x) {
@@ -210,8 +213,7 @@ public:
             peicey = peice->getShape()[i][1];
             xOfPeice = ((peice->getX() + (peicex * sizeOfBlock)) - (grid->startx + sizeOfBlock)) / sizeOfBlock;;
             yOfPeice = ((peice->getY() + (peicey * sizeOfBlock)) - (grid->starty)) / sizeOfBlock;;
-
-
+             
             grid->activity_status[yOfPeice][xOfPeice] = peice->getType();
             cout << "type in grid " << peice->getType();
 
@@ -404,7 +406,7 @@ public:
             Vector2i mousePos = Mouse::getPosition(win);
             /// \note Converting the mouse position to world coordinates (if needed for sprites, buttons, etc.)
             Vector2f mouseWorldPos = win.mapPixelToCoords(mousePos);
-            cout << mouseWorldPos.x << "\t" << mouseWorldPos.y << endl;
+          //  cout << mouseWorldPos.x << "\t" << mouseWorldPos.y << endl;
 
                       if (event->is<sf::Event::Closed>())
                 win.close();
@@ -528,18 +530,19 @@ public:
             if (placing.isAnimationLocked()) {
                 // draw the current flash?frame for each block
                 for (int i = 0; i < 4; ++i) {
-                    /*Sprite cell = placing.getFrames()[placing.getAnimFrame()];
-                  //  Color color = cell.getColor();
-                //    color.a = 128;
+                    Sprite cell = placing.getFrames()[placing.getAnimFrame()];
+                    Color color = cell.getColor();
+                    color.a = 128 + (placing.getAnimFrame() * 20);
+                    cell.setColor(color);
                     float x = peice->getX() + peice->getShape()[i][0] * sizeOfBlock;
                     float y = peice->getY() + peice->getShape()[i][1] * sizeOfBlock;
                     cell.setPosition(
                         { x , y }
                     );
                     cell.scale({ scaleConstantOfBlocks , scaleConstantOfBlocks });
-                    window.draw(cell);*/
+                    window.draw(cell);
                 }
-                cout << endl;
+                //cout << endl;
             }
             else {
                 peice->draw(window);
