@@ -11,6 +11,8 @@ protected:
     static bool exit;
     static bool gameOpen;
     static bool pauseScreenOpen;
+    static bool highscoreOpen;
+    static bool scoreboardOpen;
 
     int noOfButtons;
     std::vector<Texture> textures;
@@ -28,6 +30,8 @@ public:
     static bool isGameOpen();
     static bool shouldExit();
     static bool isPauseScreenOpen();
+    static bool isScoreboardOpen();
+    static bool isHighscoreOpen();
 
     // Setters
     static void setMenuOpen(bool open);
@@ -36,8 +40,10 @@ public:
     static void setHtpOpen(bool open);
     static void setGameOpen(bool open);
     static void setExit(bool shouldExit);
-
+    static void setHighscore(bool shouldExit);
+    static void setScoreboard(bool shouldExit);
      virtual int onButtonClick(int index);
+      
     void checkEvents(sf::RenderWindow& win);
 
     void updateStates(int i) {

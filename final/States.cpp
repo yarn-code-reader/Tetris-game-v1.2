@@ -34,6 +34,9 @@ bool States::htpOpen = false;
 bool States::exit = false;
 bool States::gameOpen = false;
 bool States::pauseScreenOpen = false;
+ bool States:: highscoreOpen = false;
+ bool States::scoreboardOpen = false;
+
 // Getter implementations
 
  void States:: drawScreen(RenderWindow& win) {
@@ -67,6 +70,14 @@ bool States::isHtpOpen() {
 bool States::isGameOpen() {
     return gameOpen;
 }
+
+bool States::isScoreboardOpen() {
+    return scoreboardOpen;
+}
+
+bool States::isHighscoreOpen() {
+    return highscoreOpen;
+}
 bool States::shouldExit() {
     return exit;
 }
@@ -96,6 +107,14 @@ void States::setExit(bool shouldExit) {
     exit = shouldExit;
 }
 
+void States::setScoreboard(bool shouldExit) {
+    scoreboardOpen = shouldExit;
+}
+
+void States::setHighscore(bool shouldExit) {
+    highscoreOpen = shouldExit;
+}
+
 int States::onButtonClick(int index) {
     cout << "on btn click of states" << endl;
     return 0;
@@ -113,14 +132,12 @@ void States::checkEvents(sf::RenderWindow& win) {
             if (sprites[i].getGlobalBounds().contains(mouseWorldPos))
             {
                 // hover state
-               // updateStates(i,1);
                 statesOfBtn[i] = 1;
                 break;
             }
             else {
                 //orignal state
                 statesOfBtn[i] = 0;
-               // updateStates(i);
             }
         }
 

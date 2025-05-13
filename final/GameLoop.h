@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <sstream>
+#include <SFML/Audio.hpp>
 
 class GameLoop
 {
@@ -15,7 +16,8 @@ public:
     Grid* grid;
     Peice* peice;
     Peice* next_peices[3];
-    Vector2f coordinates[3];
+    Peice* hold;
+    Vector2f coordinates[4];
     Animation placing;
     Animation deleting;
     Texture bgTexture;
@@ -33,12 +35,14 @@ public:
     Font font;
     int fontSize;
     stringstream tempStream;
-
+    //sf::SoundBuffer soundbuffer[4];
+    sf::Sound* sounds[4]; // using pointe rkioke sound class ka default constructor nahi ha 
+    int noOfSounds;
 public:
-    GameLoop(Grid * grid = nullptr, string t = "", string f = "") : peice(nullptr), grid(grid),
+    GameLoop(Grid * grid = nullptr, string t = "", string f = "",int noOfS = 0, Sound s[4] = {}) : hold(nullptr), peice(nullptr), grid(grid),
         bgTexture(t), isRunning(true), score(0), lines(0), levels(0), fallDelay(1.0), 
         timer(0), PeiceColided(false), font(f), scoreOnScreen(font, "0", fontSize),
-        levelOnScreen( font, "0", fontSize) , linesOnScreen( font, "0", fontSize) {
+        levelOnScreen( font, "0", fontSize) , noOfSounds(noOfS), linesOnScreen( font, "0", fontSize)  {
        
         srand(time(0));
         generatePeices();
@@ -53,15 +57,35 @@ public:
         linesOnScreen.setPosition({ 175,265 });
         // set attributes of text 
 
+        for (int i = 0; i < noOfSounds; i++)
+        {
+            sounds[i] = new Sound(s[i]);
+        }
+    }
+
+    ~GameLoop() {
+        for (int i = 0; i < noOfSounds; i++)
+        {
+           delete sounds[i];
+        }
     }
     
     bool isrunningTrue() {
         return isRunning;
     }
 
-    void StartGame() {
+    void resetGame() {
+        grid->resetGrid();
+        generatePeices();
+        hold = nullptr;
+        score = 0;
+        levels = 0;
+        lines = 0;
         spawnPeice();
+        isRunning = true;
     }
+
+    
 
     void create_a_peice(Peice *& p) {
        // srand(time(0));
@@ -145,8 +169,7 @@ public:
         peice->setY(peiceStarty);
 
         int typeOfPeice = peice->getType();
-        cout << "peice type before assigning animation: " << typeOfPeice << endl;
-     //   peice->setSpriteOfPeice(grid->getAllBlocks(typeOfPeice));
+
         makeAnimation(
             getAnimationPlacing(),
             grid->getAllBlocks(typeOfPeice).getSprite(),
@@ -161,12 +184,36 @@ public:
             if (grid->activity_status[yOfPeice][xOfPeice] != 0) {
                 isRunning = false;
                 cout << "GAME OVER" << endl;
+
+                States::setScoreboard(true);
+                States::setGameOpen(false);
+                resetGame();
             }
         }
 
        
     }
 
+    void hold_the_peice() {
+        if (hold == nullptr) {
+            cout << "hold is null" << endl;
+            hold = peice;
+            peice = nullptr;
+            spawnPeice();
+        }
+        else {
+            float tempx = peice->getX();
+            float tempy = peice->getY();
+            Peice* temp = peice;
+            peice = hold;
+            hold = temp;
+            peice->setX(tempx);
+            peice->setY(tempy);
+        }
+
+        hold->setX(coordinates[next_peices_count]. x + next_peices_count * 255);
+        hold->setY(600);
+    }
     int calculating_x_off_set(int x) {
         int temp = ((peice->getX() + (x * sizeOfBlock)) - (grid->startx + sizeOfBlock)) / sizeOfBlock;
         return temp;
@@ -215,12 +262,6 @@ public:
             yOfPeice = ((peice->getY() + (peicey * sizeOfBlock)) - (grid->starty)) / sizeOfBlock;;
              
             grid->activity_status[yOfPeice][xOfPeice] = peice->getType();
-            cout << "type in grid " << peice->getType();
-
-            //       grid->print();
-              //     cout << endl;
-
-
         }
     }
     void move_the_peice_down() {
@@ -297,8 +338,6 @@ public:
                 }
                 else {
                     cout << "Peice cannot rotate" << endl;
-                    cout << xOfPeice << endl;
-                    cout << yOfPeice << endl;
                     copy = false;
                     break;
                 }
@@ -376,7 +415,6 @@ public:
             }
 
             if (allFilled) {
-                cout << "Clear A row" << endl;
                 score += 100;
                 lines += 1;
 
@@ -445,16 +483,14 @@ public:
                     {
                         hardDrop();
                     }
-                    else if (keyPressed->scancode == sf::Keyboard::Scancode::S)
-                    {
-                        cout << "Score" << score << endl;
-                        cout << "lines" << lines << endl;
-                        cout << "level" << levels << endl;
-                    }
                     else if (keyPressed->scancode == sf::Keyboard::Scancode::P)
                     {
                         States::setPauseScreenOpen(true);
                         States::setGameOpen(false);
+                    }
+                    else if (keyPressed->scancode == sf::Keyboard::Scancode::C)
+                    {
+                        hold_the_peice();
                     }
                 }
             }
@@ -507,7 +543,6 @@ public:
                         }
                         Sprite cell = deleting.getFrames()[deleting.getAnimFrame()];
                         
-                        cout << "while drawing deleting anim frame = " << deleting.getAnimFrame() << endl;
                         cell.setPosition(
                             { setx , sety }
                         );
@@ -529,10 +564,10 @@ public:
         if (peice) {
             if (placing.isAnimationLocked()) {
                 // draw the current flash?frame for each block
-                for (int i = 0; i < 4; ++i) {
+                for (int i = 0; i < 4; i++) {
                     Sprite cell = placing.getFrames()[placing.getAnimFrame()];
                     Color color = cell.getColor();
-                    color.a = 128 + (placing.getAnimFrame() * 20);
+                    color.a = 128 + (placing.getAnimFrame() * 30);
                     cell.setColor(color);
                     float x = peice->getX() + peice->getShape()[i][0] * sizeOfBlock;
                     float y = peice->getY() + peice->getShape()[i][1] * sizeOfBlock;
@@ -542,7 +577,7 @@ public:
                     cell.scale({ scaleConstantOfBlocks , scaleConstantOfBlocks });
                     window.draw(cell);
                 }
-                //cout << endl;
+
             }
             else {
                 peice->draw(window);
@@ -562,7 +597,8 @@ public:
      //   cout << "-------" << endl;
 
         // drawing hold peics
-        // 
+        if(hold != nullptr)
+        { hold->draw(window); }
         // drawing levels
         window.draw(levelOnScreen);
 
@@ -577,8 +613,6 @@ public:
         if (placing.isAnimationLocked()) {
             placing.update(dt);
             if (!(placing.isAnimationLocked())) {
-
-                cout << "me true" << endl;
                 lock_the_peice();
                 check_if_any_row_is_filled();
                 spawnPeice();

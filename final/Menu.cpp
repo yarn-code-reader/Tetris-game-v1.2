@@ -45,8 +45,12 @@ int Menu ::  onButtonClick(int index)  {
     case 1:
         optionsOpen = true; menuOpen = false; break;
     case 2: 
+        cout << "htp true " << endl;
         htpOpen = true; menuOpen = false; break;
-    case 3: 
+    case 3:
+
+        highscoreOpen = true; menuOpen = false; break;
+    case 4: 
         return -1;
     default: 
         break;
