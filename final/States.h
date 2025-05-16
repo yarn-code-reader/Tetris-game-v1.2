@@ -1,6 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 using namespace sf;
 class States
 {
@@ -19,9 +20,12 @@ protected:
     std::vector<Sprite> sprites;
     std::vector<int>statesOfBtn;
     Texture bg;
+   
     
 public:
     States();
+    States(int noOfB, std::vector<Texture> texture, std::string bg, Sound* s);
+
     States(int noOfB, std::vector<Texture> texture, std::string bg);
     // Getters
     static bool isMenuOpen();
@@ -46,21 +50,9 @@ public:
       
     void checkEvents(sf::RenderWindow& win);
 
-    void updateStates(int i) {
-          
-            if (statesOfBtn[i] == 0)
-            {
-                sprites[i].setTextureRect((sf::IntRect({ 0, 0 }, { 144, 127 })));
-            }
-            else if (statesOfBtn[i] == 1)
-            {
-                sprites[i].setTextureRect((sf::IntRect({ 0, 127 }, { 144, 127 })));
-            }
-            else if (statesOfBtn[i] == 2)
-            {
-                sprites[i].setTextureRect((sf::IntRect({ 0, 254 }, { 144, 127 })));
-            }
-    }
+    virtual void updateStates(int i);
 
     virtual void drawScreen(RenderWindow& win);
+
+    
 };

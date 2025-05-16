@@ -9,4 +9,5 @@ extern int sizeOfBlock;
 extern float winH;
 extern float winW;
 extern float scaleConstantOfBlocks;
+extern int maxScore;
 #endif

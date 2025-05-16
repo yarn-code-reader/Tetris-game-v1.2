@@ -10,8 +10,8 @@ class Highscore :
 	Text highscoreonscreen;
 	Font font;
 	std::fstream file;
-	int maxScore = 10;
 	string filepath;
+
 public:
 	Highscore(std::string bgTexture, std::vector<Texture> texture, int noOfB, string filepath, string f );
 	void drawScreen(sf::RenderWindow& win);

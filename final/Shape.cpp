@@ -81,7 +81,7 @@ void Z_Shape::rotate(int modify[4][2]) {
 		rotationState = 1;
 	}
 	else if (rotationState == 1) {
-		int temp[4][2] = { {1, 0}, {1, 1}, {1, 2}, {2, 1} };
+		int temp[4][2] = { {2,0}, {1,1}, {2,1}, {1,2} };
 		for (int i = 0; i < 4; i++) {
 			modify[i][0] = temp[i][0];
 			modify[i][1] = temp[i][1];
@@ -89,7 +89,7 @@ void Z_Shape::rotate(int modify[4][2]) {
 		rotationState = 2;
 	}
 	else if (rotationState == 2) {
-		int temp[4][2] = { {0, 1}, {1, 1}, {2, 1}, {1, 2} };
+		int temp[4][2] = { {0,1}, {1,1}, {1,2}, {2,2} };
 		for (int i = 0; i < 4; i++) {
 			modify[i][0] = temp[i][0];
 			modify[i][1] = temp[i][1];
@@ -97,7 +97,7 @@ void Z_Shape::rotate(int modify[4][2]) {
 		rotationState = 3;
 	}
 	else if (rotationState == 3) {
-		int temp[4][2] = { {0, 1}, {1, 0}, {1, 1}, {1, 2} };
+		int temp[4][2] = { {1,0}, {0,1}, {1,1}, {0,2} };
 		for (int i = 0; i < 4; i++) {
 			modify[i][0] = temp[i][0];
 			modify[i][1] = temp[i][1];

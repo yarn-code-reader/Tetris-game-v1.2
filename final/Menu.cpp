@@ -1,10 +1,17 @@
 #include "Menu.h"
+#include <SFML/Audio.hpp>
 Menu :: Menu(){}
-Menu ::Menu(std::string bgTexture = "allTextures\\default.png", vector<Texture> texture = {}, int noOfB = 0) : States(noOfB, texture, bgTexture) {
+Menu ::Menu(std::string bgTexture = "allTextures\\default.png", vector<Texture> texture = {}, int noOfB = 0, Sound* s = nullptr) :bgSound(s), States(noOfB, texture, bgTexture) {
     for (int i = 0; i < noOfButtons; i++)
     {
         sprites[i].scale({ 0.75, 0.75 });
     }
+    if (bgSound) {
+        
+        bgSound->play();
+        bgSound->setLooping(true);
+    }
+
 }
 
 
@@ -41,6 +48,7 @@ int Menu ::  onButtonClick(int index)  {
     std::cout << "on btn click of menu" << endl;;
     switch (index) {
     case 0:
+        cout << "in menu.cpp " << bgSound->getVolume() << endl;
         gameOpen = true; menuOpen = false; break;
     case 1:
         optionsOpen = true; menuOpen = false; break;
@@ -51,8 +59,12 @@ int Menu ::  onButtonClick(int index)  {
 
         highscoreOpen = true; menuOpen = false; break;
     case 4: 
+        if (bgSound) {
+        bgSound->stop();
+    }
         return -1;
     default: 
+       
         break;
     }
     return 0;

@@ -3,8 +3,10 @@
 using namespace std;
 
 States :: States(){}
+
+
 //{} basically initalizes a 2d vector of textuere emty textures
-States::States(int noOfB = 0, vector<Texture> texture = {}, std::string bg = "allTextures\\default.png") : noOfButtons(noOfB) , bg(bg){
+States::States(int noOfB = 0, vector<Texture> texture = {}, std::string bg = "allTextures\\default.png"  ) : noOfButtons(noOfB), bg(bg) {
     //now copying 2d vectos of texture into each other
 
     //now we need to resize the vectors to acess them warna error aa jaiga
@@ -13,9 +15,7 @@ States::States(int noOfB = 0, vector<Texture> texture = {}, std::string bg = "al
 
     for (int i = 0; i < noOfButtons; i++)
     {
-       
-            textures[i] = texture[i];
-        
+            textures[i] = texture[i];        
     }
 
     //initalizing my sprites into the 1st state of buttons
@@ -164,5 +164,21 @@ void States::checkEvents(sf::RenderWindow& win) {
            // cout << "----------------------" << endl << endl;
         }
 
+    }
+}
+
+void States::  updateStates(int i) {
+
+    if (statesOfBtn[i] == 0)
+    {
+        sprites[i].setTextureRect((sf::IntRect({ 0, 0 }, { 144, 127 })));
+    }
+    else if (statesOfBtn[i] == 1)
+    {
+        sprites[i].setTextureRect((sf::IntRect({ 0, 127 }, { 144, 127 })));
+    }
+    else if (statesOfBtn[i] == 2)
+    {
+        sprites[i].setTextureRect((sf::IntRect({ 0, 254 }, { 144, 127 })));
     }
 }

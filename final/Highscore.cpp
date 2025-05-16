@@ -1,5 +1,6 @@
 
 #include "Highscore.h"
+#include "GlobalVar.h"
 #include <sstream>
 #include <vector>
 #include <fstream>
